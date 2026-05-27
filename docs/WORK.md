@@ -5,38 +5,23 @@
 
 ---
 
-## 오늘 할 작업 (2026-05-27)
-
-### 기반 정비
-- [ ] `vite.config.ts` 프록시 수정 — SK API 경로 제거, 공공데이터포털·서울 열린데이터광장 경로로 교체
-- [ ] `CLAUDE.md` SK API 관련 내용 → 새 API 구조로 업데이트
-- [ ] `.env` API 키 교체 — 공공데이터포털 키 + 서울 열린데이터광장 키
-
-### Day 1 — 데이터 통신 뼈대
-- [ ] `src/api/subway.ts` 전면 재작성
-  - 공공데이터포털 혼잡도 API 호출 (현재 시간대 슬롯 추출 포함)
-  - 서울 열린데이터광장 도착 정보 API 호출
-  - API 키 없을 때 목업 폴백 유지
-- [ ] 두 API 응답 구조 콘솔 검증
-- [ ] **완료 기준:** 역 이름 입력 → 콘솔에 `{ congestion: 68, arrival: "2분 후" }` 출력
-
 ---
 
 ## 이후 예정
 
 ### Day 2 — 알고리즘 + 핵심 UI
-- [ ] `src/constants/stationWeights.ts` — 주요 역 10~15개 가중치 테이블 작성
+- [x] `src/constants/stationWeights.ts` — 주요 역 10~15개 가중치 테이블 작성
   - 역당 상행/하행 배열 + `tip` 필드 포함
   - 역사 안내도 직접 조사 (서울교통공사 + 또타 앱 참고)
-- [ ] `src/utils/calcCongestion.ts` — 전체 혼잡도 × 가중치 계산 로직
-- [ ] `src/hooks/useCongestion.ts` — 혼잡도 데이터 훅
+- [x] `src/utils/calcCongestion.ts` — 전체 혼잡도 × 가중치 계산 로직
+- [x] `src/hooks/useCongestion.ts` — 혼잡도 데이터 훅
 - [ ] `src/hooks/useGeolocation.ts` — GPS 현재 위치 훅
 - [ ] `SubwayGrid.tsx` — 10칸 그리드 (색상 3단계, % 미노출)
 - [ ] `CarBlock.tsx` — 칸 1개 블록
 - [ ] `RecommendBanner.tsx` — 추천 칸 배너
 - [ ] `ArrivalInfo.tsx` — 도착 정보 컴포넌트
 - [ ] `StationHeader.tsx` — 역 선택 + 상행/하행 토글
-- [ ] `App.tsx` — 전체 상태 연결 및 화면 조립
+- [ ] `App.tsx` — 전체 상태 연결 및 화면 조립 (현재 임시 테스트 화면 상태, 실제 UI로 교체 필요)
 - [ ] **완료 기준:** 역 선택 → 10칸 색깔 바뀌고 추천 칸 + 도착 정보 출력
 
 ### Day 3 — 폴리싱 + 배포

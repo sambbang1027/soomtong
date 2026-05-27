@@ -31,6 +31,17 @@
 
 ## 2026-05-27
 
+- 기반 정비: `vite.config.ts` 프록시 — SK API 제거, 공공데이터포털(`/api/congestion`) + 서울 열린데이터광장(`/api/arrival`) 경로로 교체
+- Day 1: `src/api/subway.ts` 전면 재작성
+  - 공공데이터포털 혼잡도 API (시간대 슬롯 추출, 요일 분기, 2호선 내선/외선 처리 포함)
+  - 서울 열린데이터광장 도착 정보 API
+  - `VITE_CONGESTION_API_KEY` / `VITE_ARRIVAL_API_KEY` 없을 때 목업 폴백 유지
+- Day 2: `src/hooks/useCongestion.ts` 작성 — `(stationName, lineNo, direction)` 받아 `{ cars, loading, error, refetch }` 반환, 언마운트 시 요청 취소 처리
+- Day 2: `src/utils/calcCongestion.ts` 작성 — `calcCarCongestions(stationName, direction, overallPct)` → `CarCongestionResult[]` 반환, 추천 칸 자동 마킹
+- Day 2: `src/constants/stationWeights.ts` 작성 — 12개 주요 역 가중치 테이블
+  - 2호선(강남·선릉·삼성·잠실·홍대입구·신림·사당·신도림·교대·왕십리·합정): 내선/외선
+  - 1호선(서울역): 상행/하행
+  - 역당 가중치 10개(합 10.0 고정), `tip` 필드, `getWeights()` 유틸 함수 포함
 - 기획 변경에 따른 `docs/prd.md` 전면 재정비
   - 데이터 소스 변경: SK API 제외 → 공공데이터포털 혼잡도 API + 서울 열린데이터광장 도착 API 채택
   - 혼잡도 표현 수정: "실시간" → "현재 시간대 30분 통계 기준"
