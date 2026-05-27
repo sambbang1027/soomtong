@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/sk/:path*",
+      "destination": "https://apis.openapi.sk.com/:path*"
+    }
+  ]
+}
