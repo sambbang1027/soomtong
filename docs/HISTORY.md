@@ -70,3 +70,21 @@
   - `index.css`: `-webkit-tap-highlight-color: transparent`, `overscroll-behavior: none`
   - `App.tsx`: `safe-area-inset` 패딩 적용 (노치 폰 대응)
   - `SubwayGrid.tsx`: `scrollbar-width: none`, `-webkit-overflow-scrolling: touch`
+- 혼잡도 API 버그 2건 수정 (실제 API 응답 확인 기반)
+  - `toApiDirection()`: `'상행'/'하행'` → `'상선'/'하선'` (1·3·4호선 API 실제 방향 키값)
+  - `getTimeSlotKey()`: `"8시30분"` → `"8:30~ (%)"` (API 실제 시간 컬럼명 형식)
+- GitHub 업로드 → Vercel 배포 완료
+- 라이트모드 전환: 모든 컴포넌트의 다크 색상 교체 (`#0a0e1a` 배경 → `#f8fafc`, 카드 `bg-white`, 텍스트 `slate-900/500`)
+- 혼잡도 색상 라이트모드 조정: `bgDimClass` (`*-900/40` → `*-50`), `textClass` (`*-400` → `*-600`)
+- 방향 버튼 행선지 표시: "내선/외선/상행/하행" 대신 종착역 기준 표시
+  - 1호선: 소요산행 / 신창행
+  - 2호선: 내선 ↺ / 외선 ↻
+  - 3호선: 대화행 / 오금행
+  - 4호선: 당고개행 / 오이도행
+- `getDirectionLabel(lineNo, direction)` 유틸 추가 (`stations.ts`)
+- `SubwayGrid` props: `direction` → `directionLabel` (표시용 문자열로 분리)
+- 역 목록 대폭 확장 (12개 → 87개): GPS 기반 가장 가까운 역 감지 정확도 향상
+  - 2호선: 순환선 전 역 + 성수지선 (51개)
+  - 1호선: 종각·종로3가·동대문·서울역·용산·노량진·영등포·구로 (8개)
+  - 3호선: 경복궁·안국·종로3가·충무로·압구정·고속터미널·양재 등 (16개)
+  - 4호선: 혜화·동대문·명동·회현·서울역·삼각지·이촌·사당 등 (14개)

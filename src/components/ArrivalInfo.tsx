@@ -29,7 +29,7 @@ export default function ArrivalInfo({ stationName }: ArrivalInfoProps) {
   if (loading) {
     return (
       <div className="flex justify-center">
-        <div className="h-4 w-28 bg-slate-700/60 rounded animate-pulse" />
+        <div className="h-4 w-28 bg-slate-200 rounded animate-pulse" />
       </div>
     )
   }
@@ -37,8 +37,8 @@ export default function ArrivalInfo({ stationName }: ArrivalInfoProps) {
 
   return (
     <div className="text-center">
-      <span className="text-sm text-[#94a3b8]">다음 열차 </span>
-      <span className="text-sm font-semibold text-[#f1f5f9]">{arrival.message}</span>
+      <span className="text-sm text-slate-500">다음 열차 </span>
+      <span className="text-sm font-semibold text-slate-900">{arrival.message}</span>
     </div>
   )
 }

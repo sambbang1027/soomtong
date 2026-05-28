@@ -15,7 +15,7 @@ function getTimeSlotKey(): string {
   const now = new Date()
   const hour = now.getHours()
   const min = now.getMinutes() < 30 ? '00' : '30'
-  return `${hour}시${min}분`
+  return `${hour}:${min}~ (%)`
 }
 
 function getDayType(): '평일' | '토요일' | '일요일' {
@@ -25,13 +25,13 @@ function getDayType(): '평일' | '토요일' | '일요일' {
   return '평일'
 }
 
-// 2호선은 내선/외선, 나머지는 상선/하선
+// 2호선은 내선/외선, 나머지는 상선/하선 (API 실측값 기준)
 function toApiDirection(
   lineNo: number,
   direction: '상행' | '하행' | '내선' | '외선',
 ): string {
   if (lineNo === 2) return direction === '내선' ? '내선' : '외선'
-  return direction === '상행' ? '상행' : '하행'
+  return direction === '상행' ? '상선' : '하선'
 }
 
 function getMockCongestion(
