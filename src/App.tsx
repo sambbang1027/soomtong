@@ -1,71 +1,89 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useGeolocation } from './hooks/useGeolocation'
 import { useCongestion } from './hooks/useCongestion'
+import { getDefaultDirection } from './data/stations'
+import { STATION_WEIGHTS } from './constants/stationWeights'
+import type { StationInfo } from './data/stations'
 import type { CongestionData } from './api/subway'
-import { getLevel, LEVEL_CONFIG } from './utils/congestion'
+import StationHeader from './components/StationHeader'
+import RecommendBanner from './components/RecommendBanner'
+import ArrivalInfo from './components/ArrivalInfo'
+import SubwayGrid from './components/SubwayGrid'
 
-const STATIONS = ['강남', '선릉', '홍대입구', '신도림', '서울역']
-type Direction = CongestionData['direction']
+export default function App() {
+  const { nearestStation, loading: geoLoading } = useGeolocation()
+  const [station, setStation] = useState<StationInfo | null>(null)
+  const [direction, setDirection] = useState<CongestionData['direction']>('내선')
 
-function App() {
-  const [station, setStation] = useState('강남')
-  const [direction, setDirection] = useState<Direction>('내선')
-  const lineNo = station === '서울역' ? 1 : 2
+  useEffect(() => {
+    if (nearestStation && !station) {
+      setStation(nearestStation)
+      setDirection(getDefaultDirection(nearestStation.directionType))
+    }
+  }, [nearestStation, station])
 
-  const { cars, loading, error, refetch } = useCongestion(station, lineNo, direction)
+  const handleStationChange = (s: StationInfo) => {
+    setStation(s)
+    setDirection(getDefaultDirection(s.directionType))
+  }
+
+  const { cars, loading, error, refetch } = useCongestion(
+    station?.name ?? '',
+    station?.lineNo ?? 2,
+    direction,
+  )
+
+  const tip = station ? STATION_WEIGHTS[station.name]?.tip : undefined
 
   return (
-    <div style={{ padding: 24, fontFamily: 'monospace', background: '#111', color: '#eee', minHeight: '100vh' }}>
-      <h2>숨통 — 테스트 화면</h2>
+    <div className="min-h-screen bg-[#0a0e1a]">
+      <div
+        className="mx-auto max-w-[430px] px-4 flex flex-col gap-4"
+        style={{
+          paddingTop: 'max(40px, env(safe-area-inset-top, 40px))',
+          paddingBottom: 'max(40px, env(safe-area-inset-bottom, 40px))',
+        }}
+      >
+        <StationHeader
+          station={station}
+          geoLoading={geoLoading && !station}
+          direction={direction}
+          onStationChange={handleStationChange}
+          onDirectionChange={setDirection}
+        />
 
-      <div style={{ marginBottom: 16, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-        {STATIONS.map((s) => (
-          <button key={s} onClick={() => setStation(s)}
-            style={{ padding: '6px 12px', background: station === s ? '#6366f1' : '#333', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer' }}>
-            {s}
-          </button>
-        ))}
+        {error && (
+          <p className="text-center text-sm text-red-400 py-2">{error}</p>
+        )}
+
+        {station ? (
+          <>
+            <RecommendBanner cars={cars} loading={loading} />
+            <ArrivalInfo stationName={station.name} />
+            <SubwayGrid cars={cars} loading={loading} direction={direction} />
+
+            {tip && !loading && (
+              <div className="bg-[#1e2030] rounded-xl p-4 border border-[#2e3248] flex gap-3 items-start">
+                <span className="text-base shrink-0">💡</span>
+                <p className="text-sm text-[#94a3b8] leading-relaxed">{tip}</p>
+              </div>
+            )}
+
+            <button
+              onClick={refetch}
+              className="text-xs text-[#94a3b8] text-center py-2 active:opacity-50 transition-opacity"
+            >
+              새로고침
+            </button>
+          </>
+        ) : (
+          !geoLoading && (
+            <div className="text-center text-[#94a3b8] mt-12">
+              <p className="text-base">위의 버튼에서 역을 선택해주세요</p>
+            </div>
+          )
+        )}
       </div>
-
-      <div style={{ marginBottom: 16, display: 'flex', gap: 8 }}>
-        {(['내선', '외선', '상행', '하행'] as Direction[]).map((d) => (
-          <button key={d} onClick={() => setDirection(d)}
-            style={{ padding: '6px 12px', background: direction === d ? '#0ea5e9' : '#333', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer' }}>
-            {d}
-          </button>
-        ))}
-        <button onClick={refetch}
-          style={{ padding: '6px 12px', background: '#333', color: '#aaa', border: '1px solid #555', borderRadius: 6, cursor: 'pointer' }}>
-          새로고침
-        </button>
-      </div>
-
-      {loading && <p>불러오는 중...</p>}
-      {error && <p style={{ color: '#f87171' }}>{error}</p>}
-
-      {!loading && cars.length > 0 && (
-        <>
-          <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
-            {cars.map(({ car, pct, isRecommended }) => {
-              const cfg = LEVEL_CONFIG[getLevel(pct)]
-              return (
-                <div key={car} style={{
-                  width: 56, padding: '10px 0', textAlign: 'center', borderRadius: 8,
-                  background: cfg.hex + (isRecommended ? 'ff' : '55'),
-                  border: isRecommended ? `2px solid ${cfg.hex}` : '2px solid transparent',
-                  fontWeight: isRecommended ? 'bold' : 'normal',
-                }}>
-                  <div style={{ fontSize: 12 }}>{car}번</div>
-                  <div style={{ fontSize: 11, marginTop: 4 }}>{cfg.label}</div>
-                  {isRecommended && <div style={{ fontSize: 10, marginTop: 2 }}>★</div>}
-                </div>
-              )
-            })}
-          </div>
-          <p>추천 칸: {cars.filter((c) => c.isRecommended).map((c) => `${c.car}번`).join(', ')}</p>
-        </>
-      )}
     </div>
   )
 }
-
-export default App

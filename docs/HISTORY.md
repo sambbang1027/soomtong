@@ -51,3 +51,22 @@
   - PWA Post-MVP으로 이동
   - 와이어프레임 상행/하행 토글 반영
 - `docs/WORK.md` 새 기획 기준으로 전면 재정리
+
+## 2026-05-28
+
+- Day 2 UI 컴포넌트 + 화면 조립 완료
+  - `src/data/stations.ts` — 12개 역 목록 (GPS 좌표, 호선, 방향 타입)
+  - `src/hooks/useGeolocation.ts` — Haversine 거리 계산으로 가장 가까운 역 자동 감지
+  - `src/components/CarBlock.tsx` — 혼잡도 3단계 색상, BEST 뱃지
+  - `src/components/SubwayGrid.tsx` — 10칸 그리드, 가로 스크롤, 스켈레톤 로딩
+  - `src/components/RecommendBanner.tsx` — 추천 칸 배너, 혼잡도 색상 tint
+  - `src/components/ArrivalInfo.tsx` — 도착 정보 표시, 언마운트 시 요청 취소
+  - `src/components/StationHeader.tsx` — 역 선택 바텀시트 모달 + 방향 토글 (호선별 분기)
+  - `src/App.tsx` — 전체 상태 연결 및 화면 조립 (GPS 자동 감지 → 역 자동 설정)
+- `src/api/subway.ts` 버그 수정 2건
+  - `getTimeSlotKey()`: `"18:00~ (%)"` → `"18시00분"` (공공데이터포털 실제 응답 키 형식 일치)
+  - `toApiDirection()`: `'상선'`/`'하선'` → `'상행'`/`'하행'` (API 응답 키 형식 일치)
+- 모바일 반응형 세밀 조정
+  - `index.css`: `-webkit-tap-highlight-color: transparent`, `overscroll-behavior: none`
+  - `App.tsx`: `safe-area-inset` 패딩 적용 (노치 폰 대응)
+  - `SubwayGrid.tsx`: `scrollbar-width: none`, `-webkit-overflow-scrolling: touch`

@@ -9,25 +9,7 @@
 
 ## 이후 예정
 
-### Day 2 — 알고리즘 + 핵심 UI
-- [x] `src/constants/stationWeights.ts` — 주요 역 10~15개 가중치 테이블 작성
-  - 역당 상행/하행 배열 + `tip` 필드 포함
-  - 역사 안내도 직접 조사 (서울교통공사 + 또타 앱 참고)
-- [x] `src/utils/calcCongestion.ts` — 전체 혼잡도 × 가중치 계산 로직
-- [x] `src/hooks/useCongestion.ts` — 혼잡도 데이터 훅
-- [ ] `src/hooks/useGeolocation.ts` — GPS 현재 위치 훅
-- [ ] `SubwayGrid.tsx` — 10칸 그리드 (색상 3단계, % 미노출)
-- [ ] `CarBlock.tsx` — 칸 1개 블록
-- [ ] `RecommendBanner.tsx` — 추천 칸 배너
-- [ ] `ArrivalInfo.tsx` — 도착 정보 컴포넌트
-- [ ] `StationHeader.tsx` — 역 선택 + 상행/하행 토글
-- [ ] `App.tsx` — 전체 상태 연결 및 화면 조립 (현재 임시 테스트 화면 상태, 실제 UI로 교체 필요)
-- [ ] **완료 기준:** 역 선택 → 10칸 색깔 바뀌고 추천 칸 + 도착 정보 출력
-
-### Day 3 — 폴리싱 + 배포
-- [ ] GPS 자동 감지 연동
-- [ ] 모바일 반응형 레이아웃 최적화 (max-width 430px)
-- [ ] 호선별 브랜드 컬러 포인트 적용
+### Day 3 — 배포
 - [ ] GitHub 업로드 → Vercel 배포
 - [ ] **완료 기준:** 승강장에서 내가 만든 앱으로 칸 골라서 탑승
 
