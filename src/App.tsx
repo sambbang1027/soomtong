@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useGeolocation } from './hooks/useGeolocation'
 import { useCongestion } from './hooks/useCongestion'
 import { getDefaultDirection, getDirectionLabel } from './data/stations'
 import { getTip } from './constants/stationWeights'
 import type { StationInfo } from './data/stations'
 import type { CongestionData } from './api/subway'
+import StationSearch from './components/StationSearch'
 import StationHeader from './components/StationHeader'
 import RecommendBanner from './components/RecommendBanner'
 import ArrivalInfo from './components/ArrivalInfo'
@@ -14,13 +15,15 @@ export default function App() {
   const { nearestStation, loading: geoLoading } = useGeolocation()
   const [station, setStation] = useState<StationInfo | null>(null)
   const [direction, setDirection] = useState<CongestionData['direction']>('내선')
+  const geoAutoSelected = useRef(false)
 
   useEffect(() => {
-    if (nearestStation && !station) {
+    if (nearestStation && !geoAutoSelected.current) {
+      geoAutoSelected.current = true
       setStation(nearestStation)
       setDirection(getDefaultDirection(nearestStation.directionType))
     }
-  }, [nearestStation, station])
+  }, [nearestStation])
 
   const handleStationChange = (s: StationInfo) => {
     setStation(s)
@@ -45,20 +48,24 @@ export default function App() {
           paddingBottom: 'max(40px, env(safe-area-inset-bottom, 40px))',
         }}
       >
-        <StationHeader
-          station={station}
-          geoLoading={geoLoading && !station}
-          direction={direction}
-          onStationChange={handleStationChange}
-          onDirectionChange={setDirection}
-        />
-
-        {error && (
-          <p className="text-center text-sm text-red-500 py-2">{error}</p>
-        )}
-
-        {station ? (
+        {!station ? (
+          <StationSearch
+            geoLoading={geoLoading}
+            onSelect={handleStationChange}
+          />
+        ) : (
           <>
+            <StationHeader
+              station={station}
+              direction={direction}
+              onBack={() => setStation(null)}
+              onDirectionChange={setDirection}
+            />
+
+            {error && (
+              <p className="text-center text-sm text-red-500 py-2">{error}</p>
+            )}
+
             <RecommendBanner cars={cars} loading={loading} />
             <ArrivalInfo stationName={station.name} />
             <SubwayGrid cars={cars} loading={loading} directionLabel={directionLabel} />
@@ -77,12 +84,6 @@ export default function App() {
               새로고침
             </button>
           </>
-        ) : (
-          !geoLoading && (
-            <div className="text-center text-slate-400 mt-12">
-              <p className="text-base">위의 버튼에서 역을 선택해주세요</p>
-            </div>
-          )
         )}
       </div>
     </div>

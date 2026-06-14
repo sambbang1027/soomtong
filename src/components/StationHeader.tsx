@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { STATIONS, getDirectionOptions, getDirectionLabel } from '../data/stations'
+import { getDirectionOptions, getDirectionLabel } from '../data/stations'
 import type { StationInfo } from '../data/stations'
 import type { CongestionData } from '../api/subway'
 
@@ -16,57 +15,46 @@ const LINE_COLORS: Record<number, string> = {
 }
 
 interface StationHeaderProps {
-  station: StationInfo | null
-  geoLoading: boolean
+  station: StationInfo
   direction: CongestionData['direction']
-  onStationChange: (s: StationInfo) => void
+  onBack: () => void
   onDirectionChange: (d: CongestionData['direction']) => void
 }
 
 export default function StationHeader({
   station,
-  geoLoading,
   direction,
-  onStationChange,
+  onBack,
   onDirectionChange,
 }: StationHeaderProps) {
-  const [pickerOpen, setPickerOpen] = useState(false)
-  const directionOptions = station ? getDirectionOptions(station.directionType) : []
-  const lineColor = station ? (LINE_COLORS[station.lineNo] ?? '#94a3b8') : '#94a3b8'
+  const directionOptions = getDirectionOptions(station.directionType)
+  const lineColor = LINE_COLORS[station.lineNo] ?? '#94a3b8'
 
   return (
     <>
       <div className="flex items-center justify-between">
-        <span className="text-lg font-bold text-slate-900">🌬 숨통</span>
-
         <button
-          onClick={() => setPickerOpen(true)}
-          className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white border border-slate-200 shadow-sm active:opacity-70 transition-opacity min-h-[44px]"
+          onClick={onBack}
+          className="text-sm text-slate-400 active:opacity-60 transition-opacity flex items-center gap-1"
         >
-          {geoLoading ? (
-            <span className="text-sm text-slate-500 flex items-center gap-1.5">
-              <span className="inline-block w-3 h-3 border-2 border-slate-300 border-t-slate-600 rounded-full animate-spin" />
-              위치 확인 중...
-            </span>
-          ) : station ? (
-            <>
-              <span className="text-sm font-semibold text-slate-900">{station.name}역</span>
-              <span
-                className="text-xs font-bold px-1.5 py-0.5 rounded-full text-white leading-4"
-                style={{ backgroundColor: lineColor }}
-              >
-                {station.lineNo}호선
-              </span>
-              <span className="text-slate-400 text-xs">▼</span>
-            </>
-          ) : (
-            <span className="text-sm text-slate-500">역 선택 ▼</span>
-          )}
+          ← 역 변경
         </button>
+
+        <div
+          className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white border border-slate-200 shadow-sm"
+        >
+          <span className="text-sm font-semibold text-slate-900">{station.name}역</span>
+          <span
+            className="text-xs font-bold px-1.5 py-0.5 rounded-full text-white leading-4"
+            style={{ backgroundColor: lineColor }}
+          >
+            {station.lineNo}호선
+          </span>
+        </div>
       </div>
 
-      {/* 방향 토글 - 행선지 표시 */}
-      {station && directionOptions.length > 0 && (
+      {/* 방향 토글 */}
+      {directionOptions.length > 0 && (
         <div className="flex justify-end gap-2">
           {directionOptions.map((opt) => (
             <button
@@ -81,47 +69,6 @@ export default function StationHeader({
               {getDirectionLabel(station.lineNo, opt)}
             </button>
           ))}
-        </div>
-      )}
-
-      {/* 역 선택 모달 */}
-      {pickerOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-50 flex items-end justify-center"
-          onClick={() => setPickerOpen(false)}
-        >
-          <div
-            className="w-full max-w-[430px] bg-white rounded-t-2xl p-4 max-h-[70vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="w-10 h-1 bg-slate-200 rounded-full mx-auto mb-4" />
-            <p className="text-base font-semibold text-slate-900 mb-3 px-1">역 선택</p>
-            <div className="flex flex-col gap-0.5">
-              {STATIONS.map((s) => {
-                const isSelected = station?.name === s.name && station?.lineNo === s.lineNo
-                return (
-                  <button
-                    key={`${s.name}-${s.lineNo}`}
-                    onClick={() => {
-                      onStationChange(s)
-                      setPickerOpen(false)
-                    }}
-                    className={`flex items-center justify-between px-4 py-3 rounded-xl transition-colors min-h-[44px] ${
-                      isSelected ? 'bg-slate-100' : 'active:bg-slate-100'
-                    }`}
-                  >
-                    <span className="text-sm text-slate-900">{s.name}역</span>
-                    <span
-                      className="text-xs font-bold px-2 py-0.5 rounded-full text-white"
-                      style={{ backgroundColor: LINE_COLORS[s.lineNo] ?? '#94a3b8' }}
-                    >
-                      {s.lineNo}호선
-                    </span>
-                  </button>
-                )
-              })}
-            </div>
-          </div>
         </div>
       )}
     </>
