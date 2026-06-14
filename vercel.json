@@ -1,8 +1,12 @@
 {
   "rewrites": [
     {
-      "source": "/api/sk/:path*",
-      "destination": "https://apis.openapi.sk.com/:path*"
+      "source": "/api/congestion/:path*",
+      "destination": "https://api.odcloud.kr/:path*"
+    },
+    {
+      "source": "/api/arrival/:path*",
+      "destination": "https://swopenapi.seoul.go.kr/:path*"
     }
   ]
 }

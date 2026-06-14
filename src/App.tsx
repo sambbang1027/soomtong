@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useGeolocation } from './hooks/useGeolocation'
 import { useCongestion } from './hooks/useCongestion'
 import { getDefaultDirection, getDirectionLabel } from './data/stations'
@@ -12,7 +12,7 @@ import ArrivalInfo from './components/ArrivalInfo'
 import SubwayGrid from './components/SubwayGrid'
 
 export default function App() {
-  const { nearestStation, loading: geoLoading } = useGeolocation()
+  const { nearestStation, nearbyStations, loading: geoLoading } = useGeolocation()
   const [station, setStation] = useState<StationInfo | null>(null)
   const [direction, setDirection] = useState<CongestionData['direction']>('내선')
   const geoAutoSelected = useRef(false)
@@ -30,11 +30,19 @@ export default function App() {
     setDirection(getDefaultDirection(s.directionType))
   }
 
+  const [refreshTick, setRefreshTick] = useState(0)
+  const handleRefresh = useCallback(() => setRefreshTick((t) => t + 1), [])
+
   const { cars, loading, error, refetch } = useCongestion(
     station?.name ?? '',
     station?.lineNo ?? 2,
     direction,
   )
+
+  const handleRefetchAll = useCallback(() => {
+    refetch()
+    handleRefresh()
+  }, [refetch, handleRefresh])
 
   const tip = station ? getTip(station.name, direction) : undefined
   const directionLabel = station ? getDirectionLabel(station.lineNo, direction) : direction
@@ -51,6 +59,7 @@ export default function App() {
         {!station ? (
           <StationSearch
             geoLoading={geoLoading}
+            nearbyStations={nearbyStations}
             onSelect={handleStationChange}
           />
         ) : (
@@ -60,6 +69,7 @@ export default function App() {
               direction={direction}
               onBack={() => setStation(null)}
               onDirectionChange={setDirection}
+              onStationChange={handleStationChange}
             />
 
             {error && (
@@ -67,7 +77,7 @@ export default function App() {
             )}
 
             <RecommendBanner cars={cars} loading={loading} />
-            <ArrivalInfo stationName={station.name} />
+            <ArrivalInfo stationName={station.name} refreshTick={refreshTick} />
             <SubwayGrid cars={cars} loading={loading} directionLabel={directionLabel} />
 
             {tip && !loading && (
@@ -78,7 +88,7 @@ export default function App() {
             )}
 
             <button
-              onClick={refetch}
+              onClick={handleRefetchAll}
               className="text-xs text-slate-400 text-center py-2 active:opacity-50 transition-opacity"
             >
               새로고침

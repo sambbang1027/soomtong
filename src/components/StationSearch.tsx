@@ -1,38 +1,26 @@
 import { useState } from 'react'
 import { STATIONS } from '../data/stations'
 import type { StationInfo } from '../data/stations'
-
-export const LINE_COLORS: Record<number, string> = {
-  1: '#0052A4',
-  2: '#00A84D',
-  3: '#EF7C1C',
-  4: '#00A5DE',
-  5: '#996CAC',
-  6: '#CD7C2F',
-  7: '#747F00',
-  8: '#E6186C',
-  9: '#BDB092',
-}
+import { LINE_COLORS } from '../constants/lineColors'
 
 const AVAILABLE_LINES = [1, 2, 3, 4, 5, 6, 7, 8]
 
 interface Props {
   geoLoading: boolean
+  nearbyStations: StationInfo[]
   onSelect: (s: StationInfo) => void
 }
 
-export default function StationSearch({ geoLoading, onSelect }: Props) {
+export default function StationSearch({ geoLoading, nearbyStations, onSelect }: Props) {
   const [line, setLine] = useState(2)
   const [query, setQuery] = useState('')
 
   const trimmed = query.trim()
 
-  // 검색 중이면 전체 호선에서 이름 필터, 아니면 선택 호선만
   const stations = trimmed
     ? STATIONS.filter((s) => s.name.includes(trimmed))
     : STATIONS.filter((s) => s.lineNo === line)
 
-  // 검색 결과에서 중복 제거 (같은 이름+호선)
   const seen = new Set<string>()
   const dedupedStations = stations.filter((s) => {
     const key = `${s.name}-${s.lineNo}`
@@ -40,6 +28,8 @@ export default function StationSearch({ geoLoading, onSelect }: Props) {
     seen.add(key)
     return true
   })
+
+  const showNearby = !trimmed && nearbyStations.length > 0
 
   return (
     <div className="flex flex-col gap-8">
@@ -70,6 +60,28 @@ export default function StationSearch({ geoLoading, onSelect }: Props) {
             </button>
           )}
         </div>
+
+        {/* 현재 위치 근처 — 환승역이라 호선 선택이 필요한 경우 */}
+        {showNearby && (
+          <div className="border-b border-slate-100">
+            <p className="text-xs text-slate-400 px-5 pt-3 pb-1">📍 현재 위치 근처</p>
+            {nearbyStations.map((s) => (
+              <button
+                key={`nearby-${s.name}-${s.lineNo}`}
+                onClick={() => onSelect(s)}
+                className="w-full px-5 py-3.5 text-left border-b border-slate-50 last:border-0 active:bg-slate-50 transition-colors flex items-center justify-between"
+              >
+                <span className="text-[15px] text-slate-800">{s.name}역</span>
+                <span
+                  className="text-xs font-bold px-2 py-0.5 rounded-full text-white shrink-0"
+                  style={{ backgroundColor: LINE_COLORS[s.lineNo] ?? '#94a3b8' }}
+                >
+                  {s.lineNo}호선
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* 호선 탭 — 검색 중이면 숨김 */}
         {!trimmed && (

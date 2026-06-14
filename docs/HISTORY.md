@@ -129,3 +129,14 @@
   - `AVAILABLE_LINES` 수정: `[1, 2, 3, 4, 5, 6, 7, 8, 9]` → `[1, 2, 3, 4, 5, 6, 7, 8]`
   - `LINE_DIRECTION_LABEL`에서 9호선 항목 제거
   - `stationWeights.ts`에서 9호선 전용 역 가중치(신논현, 선정릉, 국회의사당, 올림픽공원) 제거
+- 버그 수정 및 UX 개선 (우선순위 높음 항목)
+  - `src/constants/lineColors.ts` 신규 생성 — LINE_COLORS를 공통 파일로 분리, 9호선 색상 제거
+  - `StationSearch.tsx`, `StationHeader.tsx` — 각자 중복 선언하던 LINE_COLORS를 공통 import로 교체
+  - `ArrivalInfo.tsx` 개선: 30초 자동 갱신(setInterval), 에러 상태 처리, `refreshTick` prop 추가
+  - `App.tsx` — `handleRefetchAll()` 추가: 새로고침 버튼 클릭 시 혼잡도·도착 정보 동시 갱신
+- GPS 및 UI 버그 수정 (중간 우선순위 항목)
+  - `useGeolocation.ts` — 거리 임계값 추가: 1km 초과 시 자동 선택 안 함
+  - `useGeolocation.ts` — 동명 역사 오매칭 대응: 같은 역명이 100m 내 여러 호선에 있으면 `nearbyStations` 반환, `nearestStation` 자동 선택 생략
+  - `StationSearch.tsx` — `nearbyStations` prop 수신 후 "📍 현재 위치 근처" 섹션으로 호선 선택 유도
+  - `SubwayGrid.tsx` — `cars` 빈 배열 상태에서 "혼잡도 데이터가 없습니다" 메시지 표시
+  - `stations.ts` — 4호선 블록을 배열 끝에서 3호선 바로 뒤(5호선 앞)로 이동 (1→2→3→4→5→6→7→8 순 정렬)

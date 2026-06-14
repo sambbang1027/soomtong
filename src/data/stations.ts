@@ -113,6 +113,27 @@ export const STATIONS: StationInfo[] = [
   { name: '경찰병원', lineNo: 3, lat: 37.5004, lng: 127.1271, directionType: 'linear' },
   { name: '오금', lineNo: 3, lat: 37.5028, lng: 127.1284, directionType: 'linear' },
 
+  // ── 4호선 ──────────────────────────────────────────────────────────────
+  { name: '수유', lineNo: 4, lat: 37.6370, lng: 127.0252, directionType: 'linear' },
+  { name: '미아사거리', lineNo: 4, lat: 37.6147, lng: 127.0273, directionType: 'linear' },
+  { name: '길음', lineNo: 4, lat: 37.6027, lng: 127.0228, directionType: 'linear' },
+  { name: '성신여대입구', lineNo: 4, lat: 37.5924, lng: 127.0162, directionType: 'linear' },
+  { name: '한성대입구', lineNo: 4, lat: 37.5877, lng: 127.0060, directionType: 'linear' },
+  { name: '혜화', lineNo: 4, lat: 37.5822, lng: 127.0017, directionType: 'linear' },
+  { name: '동대문', lineNo: 4, lat: 37.5714, lng: 127.0097, directionType: 'linear' },
+  { name: '동대문역사문화공원', lineNo: 4, lat: 37.5649, lng: 127.0093, directionType: 'linear' },
+  { name: '충무로', lineNo: 4, lat: 37.5606, lng: 127.0059, directionType: 'linear' },
+  { name: '명동', lineNo: 4, lat: 37.5606, lng: 126.9855, directionType: 'linear' },
+  { name: '회현', lineNo: 4, lat: 37.5582, lng: 126.9782, directionType: 'linear' },
+  { name: '서울역', lineNo: 4, lat: 37.5546, lng: 126.9707, directionType: 'linear' },
+  { name: '숙대입구', lineNo: 4, lat: 37.5457, lng: 126.9730, directionType: 'linear' },
+  { name: '삼각지', lineNo: 4, lat: 37.5368, lng: 126.9711, directionType: 'linear' },
+  { name: '신용산', lineNo: 4, lat: 37.5296, lng: 126.9611, directionType: 'linear' },
+  { name: '이촌', lineNo: 4, lat: 37.5160, lng: 126.9627, directionType: 'linear' },
+  { name: '동작', lineNo: 4, lat: 37.5000, lng: 126.9803, directionType: 'linear' },
+  { name: '이수', lineNo: 4, lat: 37.4869, lng: 126.9813, directionType: 'linear' },
+  { name: '사당', lineNo: 4, lat: 37.4762, lng: 126.9817, directionType: 'linear' },
+
   // ── 5호선 ──────────────────────────────────────────────────────────────
   { name: '김포공항', lineNo: 5, lat: 37.5624, lng: 126.8014, directionType: 'linear' },
   { name: '마곡', lineNo: 5, lat: 37.5577, lng: 126.8290, directionType: 'linear' },
@@ -226,26 +247,6 @@ export const STATIONS: StationInfo[] = [
   { name: '장지', lineNo: 8, lat: 37.4701, lng: 127.1255, directionType: 'linear' },
   { name: '복정', lineNo: 8, lat: 37.4646, lng: 127.1371, directionType: 'linear' },
 
-  // ── 4호선 ──────────────────────────────────────────────────────────────
-  { name: '수유', lineNo: 4, lat: 37.6370, lng: 127.0252, directionType: 'linear' },
-  { name: '미아사거리', lineNo: 4, lat: 37.6147, lng: 127.0273, directionType: 'linear' },
-  { name: '길음', lineNo: 4, lat: 37.6027, lng: 127.0228, directionType: 'linear' },
-  { name: '성신여대입구', lineNo: 4, lat: 37.5924, lng: 127.0162, directionType: 'linear' },
-  { name: '한성대입구', lineNo: 4, lat: 37.5877, lng: 127.0060, directionType: 'linear' },
-  { name: '혜화', lineNo: 4, lat: 37.5822, lng: 127.0017, directionType: 'linear' },
-  { name: '동대문', lineNo: 4, lat: 37.5714, lng: 127.0097, directionType: 'linear' },
-  { name: '동대문역사문화공원', lineNo: 4, lat: 37.5649, lng: 127.0093, directionType: 'linear' },
-  { name: '충무로', lineNo: 4, lat: 37.5606, lng: 127.0059, directionType: 'linear' },
-  { name: '명동', lineNo: 4, lat: 37.5606, lng: 126.9855, directionType: 'linear' },
-  { name: '회현', lineNo: 4, lat: 37.5582, lng: 126.9782, directionType: 'linear' },
-  { name: '서울역', lineNo: 4, lat: 37.5546, lng: 126.9707, directionType: 'linear' },
-  { name: '숙대입구', lineNo: 4, lat: 37.5457, lng: 126.9730, directionType: 'linear' },
-  { name: '삼각지', lineNo: 4, lat: 37.5368, lng: 126.9711, directionType: 'linear' },
-  { name: '신용산', lineNo: 4, lat: 37.5296, lng: 126.9611, directionType: 'linear' },
-  { name: '이촌', lineNo: 4, lat: 37.5160, lng: 126.9627, directionType: 'linear' },
-  { name: '동작', lineNo: 4, lat: 37.5000, lng: 126.9803, directionType: 'linear' },
-  { name: '이수', lineNo: 4, lat: 37.4869, lng: 126.9813, directionType: 'linear' },
-  { name: '사당', lineNo: 4, lat: 37.4762, lng: 126.9817, directionType: 'linear' },
 ]
 
 export function getDefaultDirection(
